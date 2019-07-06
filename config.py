@@ -1,3 +1,5 @@
+PATH = '/home/az/Desktop/kraken/kraken_queries.txt'
 HOST = 'outlook.office365.com'
-USERNAME = 'kraken_test@outlook.com'  # otc-confirm@kraken.com
-PASSWORD = '1244huron'
+USERNAME = 'kraken_test@outlook.com'  # 'gdovolis@bluefirecap.com'
+PASSWORD = ''
+SENDER = 'otc-confirm@kraken.com'
