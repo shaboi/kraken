@@ -30,13 +30,13 @@ def fetch_messages(month, day, yr):
     tickets, filters = [], ["INTERNALDATE", "BODY", "RFC822"]
 
     regex = [
-         ('KRKE_TRD_ID', r'(?<=Trade #: )[0-9A-Za-z]+'),
-         ('KRK_SIDE', r'(?<=Kraken :)\s*\w+'),
+         ('TRADE_ID', r'(?<=Trade #: )[0-9A-Za-z]+'),
+         ('BUY_SIDE', r'(?<=Buy Side:)\s*\w+'),
          ('PRICE', r'(?<=Unit Price:)\s*[0-9.,]+'),
-         ('QUANTITY', r'(?<=U.A. : )(?:Sells|Buys)(\s*[0-9.]+)'),
-         ('BASE', r'(?<=Base Asset:)\s*\w+'),
-         ('CURRENCY', r'(?<=Currency:)\s*\w{2,4}'),
-         ('NOTIONAL', r'(?<=Proceeds:)\s*[0-9.,]+')
+         ('QUANTITY', r'(?<=[HEADER]: )(?:Sells|Buys)(\s*[0-9.]+)'),
+         ('BASE', r'(?<=Base Asset Type:)\s*\w+'),
+         ('CURRENCY', r'(?<=Note Type:)\s*\w{2,4}'),
+         ('NOTIONAL', r'(?<=Denomination:)\s*[0-9.,]+')
     ]
 
     since = dt.date(int(yr), int(month), int(day))
@@ -53,10 +53,10 @@ def fetch_messages(month, day, yr):
         if isinstance(date, dt.datetime):
             payload['DATE_TIME'] = date.strftime("%Y/%m/%d %H:%M:%S")
 
-        if re.search('sell', str(payload['KRK_SIDE']), re.I):
-            payload['BF_SIDE'] = 'Buy'
+        if re.search('sell', str(payload['BUY_SIDE']), re.I):
+            payload['EXCHANGE'] = 'Buy'
         else:
-            payload['BF_SIDE'] = 'Sell'
+            payload['EXCHANGE'] = 'Sell'
 
         payload = {k: v.strip() for k, v in payload.items()}
         tickets.append(payload)
